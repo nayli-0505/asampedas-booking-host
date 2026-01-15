@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Restaurant Asam Pedas Pak Lang</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: Arial, sans-serif; }
+        body { background: #f5f5f5; color: #333; }
+        
+        /* Navigation */
+        header { background: white; padding: 15px 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        nav { display: flex; justify-content: space-between; align-items: center; max-width: 1200px; margin: 0 auto; }
+        .logo { font-size: 1.2rem; font-weight: bold; color: #d32f2f; }
+        .nav-links { display: flex; list-style: none; gap: 20px; }
+        .nav-links a { text-decoration: none; color: #333; font-weight: 600; }
+        .nav-links a:hover { color: #d32f2f; }
+        
+        /* Section visibility */
+        .section { display: none; }
+        .section.active { display: block; }
+        
+        /* Hero Section */
+        .hero { display: flex; padding: 50px 20px; max-width: 1200px; margin: 0 auto; align-items: center; gap: 40px; }
+        .hero-content { flex: 1; }
+        .hero-title { font-size: 2.5rem; margin-bottom: 20px; }
+        .booking-btn { background: #d32f2f; color: white; padding: 12px 30px; border-radius: 25px; text-decoration: none; display: inline-block; margin-top: 20px; font-weight: bold; }
+        .hero-image { flex: 1; text-align: center; }
+        .food-illustration { width: 300px; height: 300px; background: white; border-radius: 50%; margin: 0 auto; display: flex; align-items: right; justify-content: left; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        
+        /* Reservation Form */
+        .reservation { background: white; max-width: 800px; margin: 40px auto; padding: 30px; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        .reservation h2 { margin-bottom: 20px; text-align: center; color: #d32f2f; }
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; margin-bottom: 5px; font-weight: bold; }
+        .form-group input, .form-group select { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; }
+        .submit-btn { background: #d32f2f; color: white; padding: 12px 20px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; display: block; margin: 20px auto 0; }
+        
+        /* Table Selection */
+        .table-selection { background: white; max-width: 900px; margin: 40px auto; padding: 30px; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        .table-selection h2 { text-align: center; margin-bottom: 30px; color: #d32f2f; font-size: 1.8rem; }
+        .tables-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 30px; margin-bottom: 30px; }
+        .table { cursor: pointer; transition: all 0.3s; position: relative; }
+        .table:hover { transform: scale(1.05); }
+        .table.selected { outline: 3px solid #d32f2f; }
+        .table-circle { width: 100px; height: 100px; background: #f0f0f0; border-radius: 50%; margin: 0 auto; display: flex; align-items: center; justify-content: center; border: 2px solid #ddd; }
+        .table-square { width: 100px; height: 100px; background: #f0f0f0; margin: 0 auto; display: flex; align-items: center; justify-content: center; border: 2px solid #ddd; }
+        .table-rectangle { width: 140px; height: 80px; background: #f0f0f0; margin: 0 auto; display: flex; align-items: center; justify-content: center; border: 2px solid #ddd; }
+        .table-number { font-weight: bold; color: #333; }
+        .next-btn { background: #d32f2f; color: white; padding: 12px 40px; border: none; border-radius: 25px; cursor: pointer; font-weight: bold; font-size: 1rem; display: block; margin: 0 auto; }
+        
+        /* Menu Selection */
+        .menu-selection { background: white; max-width: 900px; margin: 40px auto; padding: 30px; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        .menu-selection h2 { text-align: center; margin-bottom: 30px; color: #d32f2f; font-size: 1.8rem; }
+        .combo-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 30px; }
+        .combo-item { background: #f9f9f9; border-radius: 10px; padding: 15px; text-align: center; border: 2px solid #ddd; cursor: pointer; transition: all 0.3s; }
+        .combo-item:hover { border-color: #d32f2f; }
+        .combo-item.selected { border-color: #d32f2f; background: #fff0f0; }
+        .combo-number { width: 40px; height: 40px; background: #d32f2f; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 10px; font-weight: bold; }
+        .combo-name { font-weight: bold; margin-bottom: 5px; }
+        .combo-price { color: #d32f2f; font-weight: bold; }
+        .action-buttons { display: flex; justify-content: center; gap: 20px; }
+        
+        /* Confirmation */
+        .confirmation { background: white; max-width: 600px; margin: 40px auto; padding: 30px; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); text-align: center; }
+        .confirmation h2 { color: #4caf50; margin-bottom: 20px; }
+        .confirmation p { margin-bottom: 15px; }
+        .confirmation-icon { width: 80px; height: 80px; background: #4caf50; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; font-size: 2rem; }
+        .back-btn { background: #d32f2f; color: white; padding: 10px 25px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; margin-top: 20px; }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero { flex-direction: column; }
+            .nav-links { display: none; }
+            .tables-container { grid-template-columns: repeat(2, 1fr); }
+            .combo-container { grid-template-columns: repeat(2, 1fr); }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">Restaurant Asam Pedas Pak Lang</div>
+            <ul class="nav-links">
+                <li><a href="#" onclick="showSection('home')">Home</a></li>
+                <li><a href="#" onclick="showSection('reservation')">Reservation</a></li>
+                <li><a href="#" onclick="showSection('menu')">Menu</a></li>
+                <li><a href="#">Gallery</a></li>
+                <li><a href="#">About Us</a></li>
+                <li><a href="#">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+    
+    <main>
+        <!-- Home Section -->
+        <section id="home" class="section active">
+            <div class="hero">
+                <div class="hero-content">
+                    <h1 class="hero-title">Restaurant Asam Pedas Paklang</h1>
+                    <p>Experience authentic traditional flavors with our signature Asam Pedas recipes.</p>
+                    <a href="#" class="booking-btn" onclick="showSection('reservation')">Booking Now</a>
+                </div>
+                <div class="hero-image">
+                    <div class="food-illustration">
+                        <img src="asampedas.jpg" alt="Asam Pedas Dish" style="border-radius: 50%;">
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Reservation Form Section -->
+        <section id="reservation" class="section">
+            <div class="reservation">
+                <h2>Reservation</h2>
+                <form id="reservationForm">
+                    <div class="form-group">
+                        <label for="date">Select Date</label>
+                        <input type="date" id="date" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="time">Select Time</label>
+                        <input type="time" id="time" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="adults">Number of Adults</label>
+                        <select id="adults" required>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                            <option value="6">6</option>
+                            <option value="7">7</option>
+                            <option value="8">8</option>
+                            <option value="9">9</option>
+                            <option value="10">10</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="children">Number of Children</label>
+                        <select id="children">
+                            <option value="0">0</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                            <option value="6">6</option>
+                            <option value="7">7</option>
+                            <option value="8">8</option>
+                            <option value="9">9</option>
+                            <option value="10">10</option>
+                            
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="name">Name</label>
+                        <input type="text" id="name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" required>
+                    </div>
+                    <button type="submit" class="submit-btn">Next - Select Table</button>
+                </form>
+            </div>
+        </section>
+        
+        <!-- Table Selection Section -->
+        <section id="tableSelection" class="section">
+            <div class="table-selection">
+                <h2>Please select Table</h2>
+                <div class="tables-container">
+                    <div class="table" data-table="1">
+                        <div class="table-circle">
+                            <span class="table-number">T1</span>
+                        </div>
+                    </div>
+                    <div class="table" data-table="2">
+                        <div class="table-square">
+                            <span class="table-number">T2</span>
+                        </div>
+                    </div>
+                    <div class="table" data-table="3">
+                        <div class="table-rectangle">
+                            <span class="table-number">T3</span>
+                        </div>
+                    </div>
+                    <div class="table" data-table="4">
+                        <div class="table-circle">
+                            <span class="table-number">T4</span>
+                        </div>
+                    </div>
+                    <div class="table" data-table="5">
+                        <div class="table-square">
+                            <span class="table-number">T5</span>
+                        </div>
+                    </div>
+                    <div class="table" data-table="6">
+                        <div class="table-rectangle">
+                            <span class="table-number">T6</span>
+                        </div>
+                    </div>
+                </div>
+                <button class="next-btn" id="confirmTableBtn">NEXT</button>
+            </div>
+        </section>
+        
+        <!-- Menu Selection Section -->
+        <section id="menuSelection" class="section">
+            <div class="menu-selection">
+                <h2>Combo Selection</h2>
+                <div class="combo-container">
+                    <div class="combo-item" data-combo="1" data-price="15">
+                        <div class="combo-number">1</div>
+                        <div class="combo-name">Asam Pedas Ikan Pari</div>
+                        <div class="combo-price">RM 15</div>
+                    </div>
+                    <div class="combo-item" data-combo="2" data-price="20">
+                        <div class="combo-number">2</div>
+                        <div class="combo-name">Asam Pedas Ikan Temenung</div>
+                        <div class="combo-price">RM 12</div>
+                    </div>
+                    <div class="combo-item" data-combo="3" data-price="25">
+                        <div class="combo-number">3</div>
+                        <div class="combo-name">Asam Pedas Ikan Kembung</div>
+                        <div class="combo-price">RM 12 </div>
+                    </div>
+                    <div class="combo-item" data-combo="4" data-price="0">
+                        <div class="combo-number">4</div>
+                        <div class="combo-name">Order at Restaurant</div>
+    
+                    </div>
+                </div>
+                <div class="action-buttons">
+                    <button class="next-btn" id="addBtn">ADD</button>
+                    <button class="next-btn" id="menuNextBtn">NEXT</button>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Confirmation Section -->
+        <section id="confirmation" class="section">
+            <div class="confirmation">
+                <div class="confirmation-icon">✓</div>
+                <h2>Your table is booked!</h2>
+                <p>Confirmation sent to your email</p>
+                <p>RM: <span id="totalPrice">30</span></p>
+                <div id="bookingDetails">
+                    <p>Date: <span id="confirmDate"></span></p>
+                    <p>Time: <span id="confirmTime"></span></p>
+                    <p>Table: <span id="confirmTable"></span></p>
+                    <p>Guests: <span id="confirmGuests"></span></p>
+                    <p>Order: <span id="confirmOrder"></span></p>
+                </div>
+                <button class="back-btn" onclick="location.reload()">Make Another Reservation</button>
+            </div>
+        </section>
+    </main>
+    
+    <script>
+        // Store reservation data
+        let reservationData = {
+            date: '',
+            time: '',
+            adults: 0,
+            children: 0,
+            name: '',
+            email: '',
+            table: '',
+            selectedCombos: [],
+            totalPrice: 0
+        };
+        
+        // Section navigation
+        function showSection(sectionId) {
+            document.querySelectorAll('.section').forEach(section => {
+                section.classList.remove('active');
+            });
+            document.getElementById(sectionId).classList.add('active');
+        }
+        
+        // Reservation form submission
+        document.getElementById('reservationForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Store form data
+            reservationData.date = document.getElementById('date').value;
+            reservationData.time = document.getElementById('time').value;
+            reservationData.adults = document.getElementById('adults').value;
+            reservationData.children = document.getElementById('children').value;
+            reservationData.name = document.getElementById('name').value;
+            reservationData.email = document.getElementById('email').value;
+            
+            // Show table selection
+            showSection('tableSelection');
+        });
+        
+        // Table selection
+        let selectedTable = null;
+        document.querySelectorAll('.table').forEach(table => {
+            table.addEventListener('click', function() {
+                document.querySelectorAll('.table').forEach(t => t.classList.remove('selected'));
+                this.classList.add('selected');
+                selectedTable = this.dataset.table;
+            });
+        });
+        
+        // Confirm table and show menu
+        document.getElementById('confirmTableBtn').addEventListener('click', function() {
+            if (!selectedTable) {
+                alert('Please select a table');
+                return;
+            }
+            
+            reservationData.table = selectedTable;
+            showSection('menuSelection');
+        });
+        
+        // Menu selection
+        document.querySelectorAll('.combo-item').forEach(combo => {
+            combo.addEventListener('click', function() {
+                this.classList.toggle('selected');
+            });
+        });
+        
+        // Add button functionality
+        document.getElementById('addBtn').addEventListener('click', function() {
+            document.querySelectorAll('.combo-item.selected').forEach(combo => {
+                const comboId = combo.dataset.combo;
+                const comboPrice = parseInt(combo.dataset.price);
+                const comboName = combo.querySelector('.combo-name').textContent;
+                
+                // Check if already added
+                const existingIndex = reservationData.selectedCombos.findIndex(c => c.id === comboId);
+                
+                if (existingIndex !== -1) {
+                    // Increment quantity if already exists
+                    reservationData.selectedCombos[existingIndex].quantity += 1;
+                } else {
+                    // Add new combo
+                    reservationData.selectedCombos.push({
+                        id: comboId,
+                        name: comboName,
+                        price: comboPrice,
+                        quantity: 1
+                    });
+                }
+            });
+            
+            // Clear selection
+            document.querySelectorAll('.combo-item').forEach(combo => {
+                combo.classList.remove('selected');
+            });
+            
+            // Update total price
+            updateTotalPrice();
+        });
+        
+        // Update total price
+        function updateTotalPrice() {
+            reservationData.totalPrice = 0;
+            reservationData.selectedCombos.forEach(combo => {
+                reservationData.totalPrice += combo.price * combo.quantity;
+            });
+        }
+        
+        // Next button from menu to confirmation
+        document.getElementById('menuNextBtn').addEventListener('click', function() {
+            if (reservationData.selectedCombos.length === 0) {
+                alert('Please select at least one combo');
+                return;
+            }
+            
+            // Update confirmation details
+            document.getElementById('confirmDate').textContent = reservationData.date;
+            document.getElementById('confirmTime').textContent = reservationData.time;
+            document.getElementById('confirmTable').textContent = 'Table ' + reservationData.table;
+            document.getElementById('confirmGuests').textContent = 
+                parseInt(reservationData.adults) + parseInt(reservationData.children) + 
+                ' (' + reservationData.adults + ' adults, ' + reservationData.children + ' children)';
+            
+            // Format order details
+            let orderDetails = '';
+            reservationData.selectedCombos.forEach(combo => {
+                orderDetails += combo.name + ' (x' + combo.quantity + '), ';
+            });
+            document.getElementById('confirmOrder').textContent = orderDetails.slice(0, -2);
+            
+            // Update total price
+            document.getElementById('totalPrice').textContent = reservationData.totalPrice;
+            
+            // Show confirmation
+            showSection('confirmation');
+        });
+    </script>
+</body>
+</html>
